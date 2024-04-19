@@ -15,6 +15,10 @@ const headerRoutes = [
     name: "All Events",
     path: "/events/all",
   },
+  {
+    name: "Sign Up",
+    path: "/signup",
+  },
 ];
 
 export default function Header() {
