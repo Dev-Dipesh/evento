@@ -1,5 +1,6 @@
 "use client";
 
+import { THUMB_IMAGE_API } from "@/lib/constants";
 import { EventoEvent } from "@prisma/client";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
@@ -37,7 +38,7 @@ export default function EventCard({ event }: EventCardProps) {
     >
       <div className="relative flex flex-col w-full h-full bg-white/[3%] rounded-xl overflow-hidden state-effects">
         <Image
-          src={event.imageUrl}
+          src={`${THUMB_IMAGE_API}${event.slug}`}
           alt={event.name}
           width={500}
           height={280}

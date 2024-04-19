@@ -1,4 +1,5 @@
 import H1 from "@/components/h1";
+import { BANNER_IMAGE_API, THUMB_IMAGE_API } from "@/lib/constants";
 import { getEvent } from "@/lib/server-utils";
 import { EventoEvent } from "@prisma/client";
 import { Metadata } from "next";
@@ -59,7 +60,7 @@ export default async function EventPage({ params }: EventPageProps) {
     <main>
       <section className="flex justify-center items-center relative overflow-hidden py-14 md:py-20">
         <Image
-          src={event.imageUrl}
+          src={`${BANNER_IMAGE_API}${event.slug}`}
           className="blur-3xl object-cover z-0"
           alt={`${event.name} - Event Background Image`}
           fill
@@ -70,7 +71,7 @@ export default async function EventPage({ params }: EventPageProps) {
         <div className="z-1 relative flex flex-col lg:flex-row gap-6 lg:gap-16">
           <Image
             className="rounded-xl overflow-hidden border-2 border-white/50 object-cover"
-            src={event.imageUrl}
+            src={`${THUMB_IMAGE_API}${event.slug}`}
             alt={event.name}
             width={300}
             height={201}
