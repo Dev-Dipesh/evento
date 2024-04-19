@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -27,6 +28,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </Container>
+        <SpeedInsights />
       </body>
     </html>
   );
