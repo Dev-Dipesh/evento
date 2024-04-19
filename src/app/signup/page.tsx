@@ -1,7 +1,9 @@
 "use client";
 
 import H1 from "@/components/h1";
-import { FieldValues, useForm } from "react-hook-form";
+import { SignUpSchema, SignupFormType } from "@/lib/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 const inputStyles =
   "w-full h-12 rounded-lg bg-white/[7%] px-6 outline-none ring-accent/50 transition focus:ring-2 focus:bg-white/10";
@@ -12,12 +14,42 @@ export default function SignUpPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-    getValues,
-  } = useForm();
+    setError,
+  } = useForm<SignupFormType>({
+    resolver: zodResolver(SignUpSchema),
+  });
 
-  async function onSubmit(data: FieldValues) {
-    console.log(data);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+  async function onSubmit(data: SignupFormType) {
+    // Send data to the server
+    const response = await fetch("/api/signup", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) return console.error({ status: response.status });
+
+    const responseData = await response.json();
+
+    if (responseData.errors) {
+      const errors = responseData.errors;
+
+      if (errors.email) {
+        setError("email", { type: "server", message: errors.email });
+      } else if (errors.password) {
+        setError("password", { type: "server", message: errors.password });
+      } else if (errors.confirmPassword) {
+        setError("confirmPassword", {
+          type: "server",
+          message: errors.confirmPassword,
+        });
+      } else {
+        console.error({ errors });
+      }
+    } else {
+      alert(`Signup Success - User ID: ${responseData.id}`);
+    }
+
     reset();
   }
 
@@ -29,7 +61,7 @@ export default function SignUpPage() {
         className="flex flex-col gap-5 w-80 items-center"
       >
         <input
-          {...register("email", { required: "Email is required" })}
+          {...register("email")}
           type="email"
           placeholder="Email"
           className={inputStyles}
@@ -40,13 +72,7 @@ export default function SignUpPage() {
           </p>
         )}
         <input
-          {...register("password", {
-            required: "Password is required",
-            minLength: {
-              value: 8,
-              message: "Password must be at least 8 characters",
-            },
-          })}
+          {...register("password")}
           type="password"
           placeholder="Password"
           className={inputStyles}
@@ -57,11 +83,7 @@ export default function SignUpPage() {
           </p>
         )}
         <input
-          {...register("confirmPassword", {
-            required: "Confirm Password is required",
-            validate: (value) =>
-              value === getValues("password") || "Passwords must match",
-          })}
+          {...register("confirmPassword")}
           type="password"
           placeholder="Confirm Password"
           className={inputStyles}
