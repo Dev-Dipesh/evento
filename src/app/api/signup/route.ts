@@ -14,9 +14,12 @@ export async function POST(request: Request) {
     });
   }
 
+  if (Object.keys(zodErrors).length > 0) {
+    return NextResponse.json({ errors: zodErrors }, { status: 400 });
+  }
+
   return NextResponse.json(
-    Object.keys(zodErrors).length > 0
-      ? { errors: zodErrors }
-      : { id: Math.floor(Math.random() * 1000) + 1 }
+    { id: Math.floor(Math.random() * 1000) + 1 },
+    { status: 201 }
   );
 }
