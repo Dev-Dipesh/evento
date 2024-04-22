@@ -11,6 +11,10 @@ type EventPageProps = {
   };
 };
 
+type Props = {
+  params: { slug: string };
+};
+
 export async function generateMetadata({
   params,
 }: EventPageProps): Promise<Metadata> {
@@ -24,10 +28,12 @@ export async function generateMetadata({
 
   return {
     title: event.name,
+    description: event.description.slice(0, 160),
     metadataBase: new URL("https://evento.satoris.ai"),
     openGraph: {
       title: event.name,
       description: event.description.slice(0, 160), // 160 characters
+      images: [event.imageUrl],
     },
   };
 }
