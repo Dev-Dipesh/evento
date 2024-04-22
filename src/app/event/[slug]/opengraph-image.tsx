@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 // Image metadata
 export const alt = "Evento";
 export const size = {
-  width: 1200,
+  width: 900,
   height: 630,
 };
 

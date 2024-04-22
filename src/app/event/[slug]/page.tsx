@@ -1,7 +1,6 @@
 import H1 from "@/components/h1";
 import { BANNER_IMAGE_API, THUMB_IMAGE_API } from "@/lib/constants";
 import { getEvent } from "@/lib/server-utils";
-import { EventoEvent } from "@prisma/client";
 import { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -12,15 +11,24 @@ type EventPageProps = {
   };
 };
 
-type EventType = EventoEvent | null;
-
 export async function generateMetadata({
   params,
 }: EventPageProps): Promise<Metadata> {
   const event = await getEvent(params.slug);
 
+  if (!event) {
+    return {
+      title: "Event not found",
+    };
+  }
+
   return {
-    title: event ? event.name : "Event not found",
+    title: event.name,
+    metadataBase: new URL("https://evento.satoris.ai"),
+    openGraph: {
+      title: event.name,
+      description: event.description.slice(0, 160), // 160 characters
+    },
   };
 }
 
